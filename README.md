@@ -9,3 +9,6 @@
 
 ### data
 - https://www.kaggle.com/datasets/stealthtechnologies/predict-purity-and-price-of-honey?resource=download
+
+### poznámky
+- vyhodit pollen_anallysis sloupec
