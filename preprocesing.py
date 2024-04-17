@@ -6,7 +6,7 @@ import seaborn as sns
 df = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_purity_dataset.csv")
 
 # erasing of non use column
-df = df.drop("Pollen_analysis",axis=1)
+df = df.drop("Pollen_analysis", axis=1)
 # statistic print
 print(df.info())
 
@@ -14,4 +14,4 @@ print(df.info())
 ax = plt.subplot(111)
 sns.heatmap(df.corr(), annot=True, ax=ax)
 plt.savefig("correl_matrix.png")
-# plt.show()
+plt.show()
