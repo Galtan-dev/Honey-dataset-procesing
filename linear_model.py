@@ -16,31 +16,34 @@ def mse(data_y, data_x, theta):
 def linear_function(data_x, theta):
     return theta[0] * data_x[:, 0] + theta[1] * data_x[:, 1] + theta[2]
 
-selection = [1, 3, 9]
+# selection = [1, 3, 9]
+selection = [1, 3]
 # data loading and preparation
 data = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_purity_dataset.csv")
 data = data.drop("Pollen_analysis", axis=1)
 data = data.iloc[:10000, :]
 X = np.array(data[data.columns[selection]])
 y = np.array(data[data.columns[8]])
+
 # MinMax Scaler
 minmax = MinMaxScaler((1, 2))
 data_scaled = minmax.fit_transform(data)
-x_scaled = data_scaled[:, :7]
-y_scaled = data_scaled[:, 7]
+x_scaled = data_scaled[:, [1, 3]]
+y_scaled = data_scaled[:, 8]
+
 # Standardization
 standardizer = StandardScaler()
 data_standardized = standardizer.fit_transform(data)
-x_standardized = data_scaled[:, :7]
-y_standardized = data_scaled[:, 7]
+x_standardized = data_standardized[:, [1, 3]]
+y_standardized = data_standardized[:, 8]
 print("Prep complete")
 
 
 ## inicializace parametrů
 # Learning coefficient, maximum epochs limit, error evaluation
 alpha = 4e-4
-epochs_max = 25
-err_min = 1
+epochs_max = 10
+err_min = 0.022
 # Length and number of features
 m, n = X.shape
 # Random order of the data
@@ -70,6 +73,7 @@ while epoch < epochs_max:
         theta[2] = theta[2] - alpha * grad_theta[2]
 
         loss.append(mse(y, X, theta))
+        print(f"loss: {loss[-1]}, err: {err_min}")
         if loss[-1] <= err_min:
             print("Sufficient error reached, finishing the calculation.")
             break
@@ -82,11 +86,11 @@ print("loop complete")
 
 fig = plt.figure()
 ax3d = plt.subplot(111, projection="3d")
-ax3d.scatter(X[:, 0], X[:, 1], y)
-ax3d.set_title("Graf naměřených bodů", fontweight="bold")
-ax3d.set_xlabel("podíl sušiny (hm. %)")
-ax3d.set_ylabel("teplota (°C)")
-ax3d.set_zlabel("hustota (kg$\\cdot$m$^{-3}$)")
+ax3d.scatter(X[:, 0], y)  # , X[:, 1]
+# ax3d.set_title("Graf naměřených bodů", fontweight="bold")
+# ax3d.set_xlabel("podíl sušiny (hm. %)")
+# ax3d.set_ylabel("teplota (°C)")
+# ax3d.set_zlabel("hustota (kg$\\cdot$m$^{-3}$)")
 
 # Mesh to visualize the plane based on the model
 mesh_x = np.linspace(min(X[:, 0]), max(X[:, 0]), 30)
@@ -120,5 +124,6 @@ ax_loss.plot(np.linspace(0, len(loss), len(loss[::500])), loss[::500],
              color="crimson")
 ax_loss.set_xlabel("iteration #")
 ax_loss.set_ylabel("total loss")
+plt.show()
 
 
