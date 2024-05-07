@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from matplotlib import pyplot as plt
+from sklearn.preprocessing import LabelEncoder
 
 
 # predefining functions
@@ -17,25 +18,31 @@ def linear_function(data_x, theta):
     return theta[0] * data_x[:, 0] + theta[1] * data_x[:, 1] + theta[2]
 
 # selection = [1, 3, 9]
-selection = [1, 3]
+selection = [7, 9]
 # data loading and preparation
 data = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_purity_dataset.csv")
-data = data.drop("Pollen_analysis", axis=1)
+
+feature_categorical = [cname for cname in data.columns if data[cname].dtype == "object"]
+le = LabelEncoder()
+for columna in feature_categorical:
+    data[columna] = le.fit_transform(data[columna])
+
+# data = data.drop("Pollen_analysis", axis=1)
 data = data.iloc[:10000, :]
 X = np.array(data[data.columns[selection]])
-y = np.array(data[data.columns[8]])
+y = np.array(data[data.columns[10]])
 
 # MinMax Scaler
 minmax = MinMaxScaler((1, 2))
 data_scaled = minmax.fit_transform(data)
-x_scaled = data_scaled[:, [1, 3]]
-y_scaled = data_scaled[:, 8]
+x_scaled = data_scaled[:, [7, 9]]
+y_scaled = data_scaled[:, 10]
 
 # Standardization
 standardizer = StandardScaler()
 data_standardized = standardizer.fit_transform(data)
-x_standardized = data_standardized[:, [1, 3]]
-y_standardized = data_standardized[:, 8]
+x_standardized = data_standardized[:, [7, 9]]
+y_standardized = data_standardized[:, 10]
 print("Prep complete")
 
 
@@ -43,7 +50,7 @@ print("Prep complete")
 # Learning coefficient, maximum epochs limit, error evaluation
 alpha = 4e-4
 epochs_max = 10
-err_min = 0.022
+err_min = 1
 # Length and number of features
 m, n = X.shape
 # Random order of the data
