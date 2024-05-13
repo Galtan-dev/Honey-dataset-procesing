@@ -11,7 +11,8 @@ data = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_pur
 # one hot  encoding
 # one_hot_encoded = pd.get_dummies(data['Pollen_analysis'], prefix='Pollen_analysis')
 # data = pd.concat([data, one_hot_encoded], axis=1)
-#
+
+
 # # standardizace a normalizace
 # columns_to_scale = [col for col in data.columns if col != 'Pollen_analysis']
 # scaler = MinMaxScaler()
