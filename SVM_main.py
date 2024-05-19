@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import svm
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 # load data and preprocesing
 data = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_purity_dataset.csv")
@@ -11,6 +12,12 @@ data = data.sample(n=55000, random_state=42)
 # one hot  encoding
 one_hot_encoded = pd.get_dummies(data['Pollen_analysis'], prefix='Pollen_analysis')
 data = pd.concat([data, one_hot_encoded], axis=1)
+
+columns_to_scale = [col for col in data.columns if col != 'Pollen_analysis']
+scaler = MinMaxScaler()
+data[columns_to_scale] = scaler.fit_transform(data[columns_to_scale])
+scaler = StandardScaler()
+data[columns_to_scale] = scaler.fit_transform(data[columns_to_scale])
 data.drop(['Pollen_analysis'], axis=1, inplace=True)
 
 # data separation
