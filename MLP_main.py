@@ -3,12 +3,12 @@ from matplotlib import pyplot as plt
 from keras.models import Sequential
 from keras.layers import Dense, Normalization
 from keras.optimizers import Adam
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 # load data
-data = pd.read_csv("C:\\Users\\jakub\\PycharmProjects\\honey_ml\\data\\honey_purity_dataset.csv")
+data = pd.read_csv("honey_purity_dataset.csv")
 
 # one hot  encoding
 one_hot_encoded = pd.get_dummies(data['Pollen_analysis'], prefix='Pollen_analysis')
@@ -16,14 +16,12 @@ data = pd.concat([data, one_hot_encoded], axis=1)
 
 # standardization and normalizatiom
 columns_to_scale = [col for col in data.columns if col != 'Pollen_analysis']
-scaler = MinMaxScaler()
-data[columns_to_scale] = scaler.fit_transform(data[columns_to_scale])
 scaler = StandardScaler()
 data[columns_to_scale] = scaler.fit_transform(data[columns_to_scale])
 data.drop(['Pollen_analysis'], axis=1, inplace=True)
 
 # data separation
-X = data.drop(columns=['Price', "EC", "F", "G", "pH", "Density", "Viscosity", "CS", "WC"])
+X = data.drop(columns=['Price'])
 y = data['Price']
 
 # neuron site model
@@ -43,7 +41,7 @@ predictions = model.predict(x_test)
 # grafical resolutions
 plt.figure(figsize=(10, 6))
 plt.scatter(y_test, predictions, label='prediction vs. actual plot')
-plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4, label='ideality')
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'k--', lw=4, label='Reference line')
 plt.xlabel('Real values')
 plt.ylabel('Prediceted values')
 plt.legend()
@@ -52,4 +50,3 @@ plt.show()
 # resolution parameters
 print("Mean Squared Error:", mean_squared_error(y_test, predictions))
 print("Mean Absolute Error:", mean_absolute_error(y_test, predictions))
-print("R2 Score:", r2_score(y_test, predictions))
