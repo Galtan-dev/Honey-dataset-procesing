@@ -25,7 +25,7 @@ print(X.head())
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=10)
 
 # SVM for regresion fit
-regre = svm.SVR(kernel="rbf", C=10, degree=1)
+regre = svm.SVR(kernel="rbf", C=10, degree=1)   # degree is ignored for all other kernels except "poly"
 regre.fit(x_train, y_train)
 
 # resolution parametrs
